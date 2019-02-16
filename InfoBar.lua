@@ -9,7 +9,7 @@ callbacks.Register( 'Draw', function()
 
 	w, h = draw.GetScreenSize();
 
-if entities.GetLocalPlayer() then
+ if entities.GetLocalPlayer() then
 
 	draw.Color( 11, 29, 58, 180 )		draw.RoundedRectFill( w/2.5, h-30, w-(w/2.5), h )
 
@@ -63,17 +63,21 @@ if entities.GetLocalPlayer() then
 	end
 	-- FPS
 	draw.Color( 0, 128, 255, 255 )		draw.SetFont( DefaultFont )	draw.Text( (w-(w/2.5)-36), h-30, "FPS" )
-	if FPS() <= 99 then
-	draw.Color( 255, 255, 255, 255 )	draw.SetFont( NumberFont )	draw.Text( (w-(w/2.5)-33), h-16, FPS() )
+	if FPS <= 99 then
+	draw.Color( 255, 255, 255, 255 )	draw.SetFont( NumberFont )	draw.Text( (w-(w/2.5)-33), h-16, FPS )
 	else
-	draw.Color( 255, 255, 255, 255 )	draw.SetFont( NumberFont )	draw.Text( (w-(w/2.5)-35.5), h-16, FPS() )
+	draw.Color( 255, 255, 255, 255 )	draw.SetFont( NumberFont )	draw.Text( (w-(w/2.5)-34.5), h-16, FPS )
 	end
 	
-end
+ end
 
 end )
 
+local GetFPS = 0.0
 callbacks.Register( 'Draw', function()
+
+	GetFPS = 0.9 * GetFPS + (1.0 - 0.9) * globals.AbsoluteFrameTime();
+	FPS =  math.floor((1.0 / GetFPS) + 0.5);
 
  if entities.GetLocalPlayer() ~= nil then
 
@@ -101,9 +105,3 @@ callbacks.Register( 'Draw', function()
 
  end
 end)
-
-local GetFPS = 0.0
-function FPS()
-	GetFPS = 0.9 * GetFPS + (1.0 - 0.9) * globals.AbsoluteFrameTime();
-	return math.floor((1.0 / GetFPS) + 0.5);
-end
