@@ -1,11 +1,17 @@
+local KillsLogoData = http.Get( "https://i.imgur.com/5oghBBk.png" );
+local imgRGBA, imgWidth, imgHeight = common.DecodePNG( KillsLogoData );
+local KillsLogoTexture = draw.CreateTexture( imgRGBA, imgWidth, imgHeight );
+
 local DefaultFont = draw.CreateFont( "Impact", 18 )
 local NumberFont = draw.CreateFont( "Impact", 17 )
 
 callbacks.Register( 'Draw', function()
 
+	w, h = draw.GetScreenSize();
+
 if entities.GetLocalPlayer() then
 
-	draw.Color( 11, 29, 58, 100 )	draw.RoundedRectFill( w/2.5, h-30, w-(w/2.5), h )
+	draw.Color( 11, 29, 58, 180 )		draw.RoundedRectFill( w/2.5, h-30, w-(w/2.5), h )
 
 	-- Kills
 	draw.Color( 0, 128, 255, 255 )		draw.SetFont( DefaultFont )	draw.Text( (w/2.5) + 15, h-30, "K" )
@@ -29,6 +35,12 @@ if entities.GetLocalPlayer() then
 	draw.Color( 255, 255, 255, 255 )	draw.SetFont( NumberFont )	draw.Text( (w/2.5) + 53, h-16, Deaths )
 	elseif Deaths > 99 then
 	draw.Color( 255, 255, 255, 255 )	draw.SetFont( NumberFont )	draw.Text( (w/2.5) + 51, h-16, Deaths )
+	end
+	-- Round Kills
+	draw.SetTexture( KillsLogoTexture );
+	if RoundKills > 0 then
+	draw.Color( 255, 255, 255, 255 )	draw.FilledRect( (((w/2.5)+55)+10), (h-30)+6, (((w/2.5)+55)+10)+imgWidth, h )
+	draw.Color( 0, 128, 255, 255 )		draw.SetFont( DefaultFont )	draw.Text( (((w/2.5)+55)+8)+imgWidth, (h-30)+8, RoundKills )
 	end
 
 	-- Velocity
@@ -65,18 +77,14 @@ callbacks.Register( 'Draw', function()
 
  if entities.GetLocalPlayer() ~= nil then
 
-	w, h = draw.GetScreenSize();
-
 	local Entity = entities.GetLocalPlayer();
 	local Alive = Entity:IsAlive();
 
-	-- Kills, Assists, Deaths
+	-- Kills, Assists, Deaths, Round Kills
 	Kills = entities.GetPlayerResources():GetPropInt( 'm_iKills', client.GetLocalPlayerIndex() );
 	Assists = entities.GetPlayerResources():GetPropInt( 'm_iAssists', client.GetLocalPlayerIndex() );
 	Deaths = entities.GetPlayerResources():GetPropInt( 'm_iDeaths', client.GetLocalPlayerIndex() );
-
-	-- My Name
-	Name = client.GetPlayerNameByIndex( client.GetLocalPlayerIndex() );
+	RoundKills = Entity:GetProp( 'm_iNumRoundKills' );
 
 	-- Velocity
 	local VelocityX, VelocityY = Entity:GetPropFloat( "localdata", "m_vecVelocity[0]" ), Entity:GetPropFloat( "localdata", "m_vecVelocity[1]" )
