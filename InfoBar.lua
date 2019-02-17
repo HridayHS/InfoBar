@@ -1,9 +1,9 @@
-local KillIconData = http.Get( "https://i.imgur.com/5oghBBk.png" );
+local KillIconData = http.Get( "https://github.com/HridayHS/InfoBar/raw/master/images/Kill.png" );
 local imgRGBA, imgWidth, imgHeight = common.DecodePNG( KillIconData );
 local KillIconTexture = draw.CreateTexture( imgRGBA, imgWidth, imgHeight );
 
-local DefaultFont = draw.CreateFont( "Impact", 18 )
-local NumberFont = draw.CreateFont( "Impact", 17 )
+local DefaultFont = draw.CreateFont( "Impact", 18 );
+local NumberFont = draw.CreateFont( "Impact", 17 );
 
 callbacks.Register( 'Draw', function()
 
@@ -48,7 +48,7 @@ callbacks.Register( 'Draw', function()
 	draw.SetFont( DefaultFont )	draw.Text( (w/2.5) + 55, h-30, "D" )
 	draw.Color( 255, 255, 255, 255 )
 	draw.SetFont( NumberFont )	draw.Text( DeathsTextWidth, h-16, Deaths )
-	if Deaths <= 9 then 					DeathsTextWidth = (w/2.5) + 55
+	if Deaths <= 9 then 					DeathsTextWidth = (w/2.5) + 56
 	elseif Deaths > 9 and Deaths <= 99 then DeathsTextWidth = (w/2.5) + 53
 	elseif Deaths > 99 then 				DeathsTextWidth = (w/2.5) + 50
 	end
@@ -94,7 +94,7 @@ end )
 
 local GetFPS = 0.0
 function InfoBarHelper()
-
+	-- FPS
 	GetFPS = 0.9 * GetFPS + (1.0 - 0.9) * globals.AbsoluteFrameTime();
 	FPS =  math.floor((1.0 / GetFPS) + 0.5);
 
@@ -103,7 +103,6 @@ function InfoBarHelper()
 	end
 
 	local Entity = entities.GetLocalPlayer();
-	local Alive = Entity:IsAlive();
 
 	-- Team
 	TeamIndex = entities.GetLocalPlayer():GetProp( 'm_iTeamNum' );
@@ -121,7 +120,7 @@ function InfoBarHelper()
 	local VelocityX, VelocityY = Entity:GetPropFloat( "localdata", "m_vecVelocity[0]" ), Entity:GetPropFloat( "localdata", "m_vecVelocity[1]" )
 	local InitialVelocity = math.sqrt( VelocityX^2 + VelocityY^2 );
 	local FinalVelocity = math.min( 9999, InitialVelocity ) + 0.2;
-	if Alive then
+	if Entity:IsAlive() then
 		Velocity = math.floor( FinalVelocity )
 	else
 		Velocity = 0
