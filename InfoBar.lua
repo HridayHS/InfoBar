@@ -48,7 +48,7 @@ callbacks.Register( 'Draw', function()
 	draw.SetFont( DefaultFont )	draw.Text( (w/2.5) + 55, h-30, "D" )
 	draw.Color( 255, 255, 255, 255 )
 	draw.SetFont( NumberFont )	draw.Text( DeathsTextWidth, h-16, Deaths )
-	if Deaths <= 9 then 					DeathsTextWidth = (w/2.5) + 56
+	if Deaths <= 9 then 					DeathsTextWidth = (w/2.5) + 55
 	elseif Deaths > 9 and Deaths <= 99 then DeathsTextWidth = (w/2.5) + 53
 	elseif Deaths > 99 then 				DeathsTextWidth = (w/2.5) + 50
 	end
