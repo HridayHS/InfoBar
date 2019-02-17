@@ -18,6 +18,7 @@ callbacks.Register( 'Draw', function()
 		return
 	end
 
+	-- Base Background
 	draw.Color( 11, 29, 58, 180 )		draw.RoundedRectFill( w/2.5, h-30, w-(w/2.5), h )
 
 	-- Kills
