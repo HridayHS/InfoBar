@@ -1,99 +1,100 @@
-local KillIconData = http.Get( "https://github.com/HridayHS/InfoBar/raw/master/images/Kill.png" );
-local imgRGBA, imgWidth, imgHeight = common.DecodePNG( KillIconData );
-local KillIconTexture = draw.CreateTexture( imgRGBA, imgWidth, imgHeight );
+local KillimgData = http.Get( "https://github.com/HridayHS/InfoBar/raw/master/images/Kill.png" );
+local imgRGBA, imgWidth, imgHeight = common.DecodePNG( KillimgData );
+local KillimgTexture = draw.CreateTexture( imgRGBA, imgWidth, imgHeight );
 
-local DefaultFont = draw.CreateFont( "Impact", 18 );
-local NumberFont = draw.CreateFont( "Impact", 17 );
+local DefaultFont = draw.CreateFont( "Impact", 18 )
+local NumberFont = draw.CreateFont( "Impact", 17 )
+local RoundKillFont = draw.CreateFont( "Impact", 15 )
 
 callbacks.Register( 'Draw', function()
-
-	InfoBarHelper();
-	local w, h = draw.GetScreenSize();
+	InfoBarHelper()
 
 	if not entities.GetLocalPlayer() then
 		return
 	end
 
-	if TeamIndex == 0 or TeamIndex == 1 then
+	if TeamNumber == 0 or TeamNumber == 1 then
 		return
 	end
 
 	-- Base Background
-	draw.Color( 11, 29, 58, 180 )
-	draw.RoundedRectFill( w/2.5, h-30, w-(w/2.5), h )
+	draw.Color( 11, 29, 58, 180 ) draw.RoundedRectFill( x1, y1, x2, y2 )
 
-	-- Kills
+	-- Kills, Assists, Deaths, Round Kills
 	draw.Color( TeamBasedCLR[1], TeamBasedCLR[2], TeamBasedCLR[3], TeamBasedCLR[4] )
-	draw.SetFont( DefaultFont )	draw.Text( (w/2.5) + 15, h-30, "K" )
-	draw.Color( 255, 255, 255, 255 )
-	draw.SetFont( NumberFont )	draw.Text( KillsTextWidth, h-16, Kills )
-	if Kills <= 9 then 						KillsTextWidth = (w/2.5) + 15
-	elseif Kills > 9 and Kills <= 99 then 	KillsTextWidth = (w/2.5) + 13
-	elseif Kills > 99 and Kills <= 999 then KillsTextWidth = (w/2.5) + 10
-	elseif Kills > 999 then					KillsTextWidth = (w/2.5) + 7
-	end
+	draw.SetFont( DefaultFont )
+	draw.Text( KWidth, y1, "K" )
+	draw.Text( AWidth, y1, "A" )
+	draw.Text( DWidth, y1, "D" )
 
-	-- Assists
-	draw.Color( TeamBasedCLR[1], TeamBasedCLR[2], TeamBasedCLR[3], TeamBasedCLR[4] )
-	draw.SetFont( DefaultFont )	draw.Text( (w/2.5) + 35, h-30, "A" )
 	draw.Color( 255, 255, 255, 255 )
-	draw.SetFont( NumberFont )	draw.Text( AssistsTextWidth, h-16, Assists )
-	if Assists <= 9 then 						AssistsTextWidth = (w/2.5) + 35
-	elseif Assists > 9 and Assists <= 99 then	AssistsTextWidth = (w/2.5) + 33
-	elseif Assists > 99 then 					AssistsTextWidth = (w/2.5) + 30
-	end
+	draw.SetFont( NumberFont )	
+	draw.Text( KillsWidth, CommonNumberH, Kills )
+	draw.Text( AssistsWidth, CommonNumberH, Assists )
+	draw.Text( DeathsWidth, CommonNumberH, Deaths )
 
-	-- Deaths
-	draw.Color( TeamBasedCLR[1], TeamBasedCLR[2], TeamBasedCLR[3], TeamBasedCLR[4] )
-	draw.SetFont( DefaultFont )	draw.Text( (w/2.5) + 55, h-30, "D" )
-	draw.Color( 255, 255, 255, 255 )
-	draw.SetFont( NumberFont )	draw.Text( DeathsTextWidth, h-16, Deaths )
-	if Deaths <= 9 then 					DeathsTextWidth = (w/2.5) + 55
-	elseif Deaths > 9 and Deaths <= 99 then DeathsTextWidth = (w/2.5) + 53
-	elseif Deaths > 99 then 				DeathsTextWidth = (w/2.5) + 50
-	end
-
-	-- Round Kills
 	if RoundKills > 0 then
-	draw.SetTexture( KillIconTexture )
-	draw.FilledRect( (((w/2.5)+55)+10), (h-30)+6, (((w/2.5)+55)+10)+imgWidth, h )
-	draw.Color( TeamBasedCLR[1], TeamBasedCLR[2], TeamBasedCLR[3], TeamBasedCLR[4] )
-	draw.SetFont( NumberFont )	draw.Text( (((w/2.5)+55)+8)+imgWidth, h-22, RoundKills )
-	end
-
-	-- Velocity
-	draw.Color( TeamBasedCLR[1], TeamBasedCLR[2], TeamBasedCLR[3], TeamBasedCLR[4] )
-	draw.SetFont( DefaultFont )	draw.Text( (w-(w/2.5)-100), h-30, "VEL" )
+	draw.SetTexture( KillimgTexture )
 	draw.Color( 255, 255, 255, 255 )
-	draw.SetFont( NumberFont )	draw.Text( VelTextWidth, h-16, Velocity )
-	if Velocity <= 9 then						VelTextWidth = (w-(w/2.5)-95)
-	elseif Velocity > 9 and Velocity <= 99 then	VelTextWidth = (w-(w/2.5)-98)
-	elseif Velocity > 99 then					VelTextWidth = (w-(w/2.5)-101)
-	end
+	draw.FilledRect( RoundKWidth, RoundKillimgH1, RoundKWidth+imgWidth, RoundKillimgH2 )
 
-	-- Ping
 	draw.Color( TeamBasedCLR[1], TeamBasedCLR[2], TeamBasedCLR[3], TeamBasedCLR[4] )
-	draw.SetFont( DefaultFont )	draw.Text( (w-(w/2.5)-74), h-30, "PING" )
-	draw.Color( 255, 255, 255, 255 )
-	draw.SetFont( NumberFont )	draw.Text( PingTextWidth, h-16, Ping )
-	if Ping <= 9 then					PingTextWidth = (w-(w/2.5)-64)
-	elseif Ping > 9 and Ping <= 99 then	PingTextWidth = (w-(w/2.5)-68)
-	elseif Ping > 99 then				PingTextWidth = (w-(w/2.5)-70)
+	draw.SetFont( RoundKillFont )
+	draw.Text( (RoundKWidth+imgWidth)-2, RoundKillsH, RoundKills )
 	end
 
-	-- FPS
+	-- Velocity, Ping, FPS
 	draw.Color( TeamBasedCLR[1], TeamBasedCLR[2], TeamBasedCLR[3], TeamBasedCLR[4] )
-	draw.SetFont( DefaultFont )	draw.Text( (w-(w/2.5)-36), h-30, "FPS" )
-	draw.Color( 255, 255, 255, 255 )
-	draw.SetFont( NumberFont )	draw.Text( FPSTextWidth, h-16, FPS )
-	if FPS <= 99 then	FPSTextWidth = (w-(w/2.5)-33)
-	else 				FPSTextWidth = (w-(w/2.5)-36)
-	end
+	draw.SetFont( DefaultFont )
+	draw.Text( VelTextWidth, y1, "VEL" )
+	draw.Text( PingTextWidth, y1, "PING" )
+	draw.Text( FPSTextWidth, y1, "FPS" )
 
+	draw.Color( 255, 255, 255, 255 )
+	draw.SetFont( NumberFont )
+	draw.Text( VelWidth, CommonNumberH, Velocity )
+	draw.Text( PingWidth, CommonNumberH, Ping )
+	draw.Text( FPSWidth, CommonNumberH, FPS )
+
+	if Kills <= -1 and Kills >= -9 then 		KillsWidth = KWidth-3
+	elseif Kills <= -10 and Kills >= -99 then	KillsWidth = KWidth-6
+	elseif Kills <= -100 and Kills >= -999 then	KillsWidth = KWidth-9
+	elseif Kills <= 9 and Kills >= 0 then  		KillsWidth = KWidth
+	elseif Kills > 9 and Kills <= 99 then 		KillsWidth = KWidth-2.5
+	elseif Kills > 99 and Kills <= 999 then 	KillsWidth = KWidth-5
+	elseif Kills > 999 then						KillsWidth = KWidth-8
+	end
+	if Assists <= 9 then 						AssistsWidth = AWidth
+	elseif Assists > 9 and Assists <= 99 then	AssistsWidth = AWidth-2.5
+	elseif Assists > 99 then 					AssistsWidth = AWidth-5
+	end
+	if Deaths <= 9 then 						DeathsWidth = DWidth
+	elseif Deaths > 9 and Deaths <= 99 then 	DeathsWidth = DWidth-2.5
+	elseif Deaths > 99 then 					DeathsWidth = DWidth-5
+	end
+	if Velocity <= 9 then						VelWidth = VelTextWidth+6
+	elseif Velocity > 9 and Velocity <= 99 then	VelWidth = VelTextWidth+2
+	elseif Velocity > 99 then					VelWidth = VelTextWidth-1
+	end
+	if Ping <= 9 then							PingWidth = PingTextWidth+10
+	elseif Ping > 9 and Ping <= 99 then			PingWidth = PingTextWidth+6
+	elseif Ping > 99 then						PingWidth = PingTextWidth+4
+	end
+	if FPS <= 99 then							FPSWidth = FPSTextWidth+3.5
+	else 										FPSWidth = FPSTextWidth+1
+	end
 end )
 
 local GetFPS = 0.0
 function InfoBarHelper()
+	w, h = draw.GetScreenSize();
+	x1, y1, x2, y2 = w/2.5, h-30, w-x1, h
+
+	CommonNumberH = y2-16
+	KWidth, AWidth, DWidth, RoundKWidth = x1+15, x1+35, x1+55, x1+65
+	RoundKillimgH1, RoundKillsH, RoundKillimgH2 = h-24, h-20, h
+	VelTextWidth, PingTextWidth, FPSTextWidth = x2-100, x2-74, x2-36
+
 	-- FPS
 	GetFPS = 0.9 * GetFPS + (1.0 - 0.9) * globals.AbsoluteFrameTime();
 	FPS =  math.floor((1.0 / GetFPS) + 0.5);
@@ -105,9 +106,9 @@ function InfoBarHelper()
 	local Entity = entities.GetLocalPlayer();
 
 	-- Team
-	TeamIndex = entities.GetLocalPlayer():GetProp( 'm_iTeamNum' );
-	if TeamIndex == 2 then TeamBasedCLR = {255, 140, 0, 255}
-	elseif TeamIndex == 3 then TeamBasedCLR = {0, 128, 255, 255}
+	TeamNumber = entities.GetLocalPlayer():GetTeamNumber()
+	if TeamNumber == 2 then TeamBasedCLR = {255, 140, 0, 255}
+	elseif TeamNumber == 3 then TeamBasedCLR = {0, 128, 255, 255}
 	end
 
 	-- Kills, Assists, Deaths, Round Kills
