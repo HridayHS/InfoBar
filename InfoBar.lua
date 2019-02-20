@@ -4,7 +4,6 @@ local KillimgTexture = draw.CreateTexture( imgRGBA, imgWidth, imgHeight );
 
 callbacks.Register( 'Draw', function()
 	InfoBarHelper()
-	ResolutionCheck()
 
 	if not entities.GetLocalPlayer() then
 		return
@@ -113,20 +112,27 @@ function InfoBarHelper()
 
 	-- Ping
 	Ping = entities.GetPlayerResources():GetPropInt( "m_iPing", client.GetLocalPlayerIndex() );
-end
 
-function ResolutionCheck()
-	InfoBarHelper()
 	if w == 1024 and h == 768 then
 		DefaultFont = draw.CreateFont( "Impact", 18 )
 		NumberFont = draw.CreateFont( "Impact", 17 )
 		RoundKillFont = draw.CreateFont( "Impact", 15 )
 
-		x1, y1, x2, y2 = w/2.5, h-30, w-x1, h
+		x1 = (w/2.5)
+		x2 = w-x1
+		y1 = h-30
+		y2 = h
 		CommonNumberH = y2-16
-		KWidth, AWidth, DWidth = x1+15, x1+35, x1+55
-		RoundKWidth, RoundKillimgH1, RoundKillsH, RoundKillimgH2 = x1+65, h-24, h-20, h
-		VelTextWidth, PingTextWidth, FPSTextWidth = x2-100, x2-74, x2-36
+		KWidth = x1+15
+		AWidth = x1+35
+		DWidth = x1+55
+		RoundKWidth = x1+65
+		RoundKillimgH1 = h-24
+		RoundKillsH = h-20
+		RoundKillimgH2 = h
+		VelTextWidth = x2-100
+		PingTextWidth = x2-74
+		FPSTextWidth = x2-36
 
 		if Ping <= 9 then					PingWidth = PingTextWidth+10
 		elseif Ping > 9 and Ping <= 99 then	PingWidth = PingTextWidth+6
@@ -140,11 +146,21 @@ function ResolutionCheck()
 		NumberFont = draw.CreateFont( "Impact", 19 )
 		RoundKillFont = draw.CreateFont( "Impact", 17 )
 
-		x1, y1, x2, y2 = (w/2.5)+10, h-35, w-x1, h
+		x1 = (w/2.5)+10
+		x2 = w-x1
+		y1 = h-35
+		y2 = h
 		CommonNumberH = y2-19
-		KWidth, AWidth, DWidth = x1+15, x1+40, x1+65
-		RoundKWidth, RoundKillimgH1, RoundKillsH, RoundKillimgH2 = x1+77, h-26, h-23, h-2
-		VelTextWidth, PingTextWidth, FPSTextWidth = x2-112, x2-80, x2-36
+		KWidth = x1+15
+		AWidth = x1+40
+		DWidth = x1+65
+		RoundKWidth = x1+77
+		RoundKillimgH1 = h-26
+		RoundKillsH = h-23
+		RoundKillimgH2 = h-2
+		VelTextWidth = x2-112
+		PingTextWidth = x2-80
+		FPSTextWidth = x2-36
 
 		if Ping <= 9 then					PingWidth = PingTextWidth+10
 		elseif Ping > 9 and Ping <= 99 then	PingWidth = PingTextWidth+8
