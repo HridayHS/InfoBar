@@ -2,12 +2,9 @@ local KillimgData = http.Get( "https://github.com/HridayHS/InfoBar/raw/master/im
 local imgRGBA, imgWidth, imgHeight = common.DecodePNG( KillimgData );
 local KillimgTexture = draw.CreateTexture( imgRGBA, imgWidth, imgHeight );
 
-local DefaultFont = draw.CreateFont( "Impact", 18 )
-local NumberFont = draw.CreateFont( "Impact", 17 )
-local RoundKillFont = draw.CreateFont( "Impact", 15 )
-
 callbacks.Register( 'Draw', function()
 	InfoBarHelper()
+	ResolutionCheck()
 
 	if not entities.GetLocalPlayer() then
 		return
@@ -18,7 +15,7 @@ callbacks.Register( 'Draw', function()
 	end
 
 	-- Base Background
-	draw.Color( 11, 29, 58, 180 ) draw.RoundedRectFill( x1, y1, x2, y2 )
+	draw.Color( 11, 29, 58, 200 ) draw.RoundedRectFill( x1, y1, x2, y2 )
 
 	-- Kills, Assists, Deaths, Round Kills
 	draw.Color( TeamBasedCLR[1], TeamBasedCLR[2], TeamBasedCLR[3], TeamBasedCLR[4] )
@@ -76,24 +73,11 @@ callbacks.Register( 'Draw', function()
 	elseif Velocity > 9 and Velocity <= 99 then	VelWidth = VelTextWidth+2
 	elseif Velocity > 99 then					VelWidth = VelTextWidth-1
 	end
-	if Ping <= 9 then							PingWidth = PingTextWidth+10
-	elseif Ping > 9 and Ping <= 99 then			PingWidth = PingTextWidth+6
-	elseif Ping > 99 then						PingWidth = PingTextWidth+4
-	end
-	if FPS <= 99 then							FPSWidth = FPSTextWidth+3.5
-	else 										FPSWidth = FPSTextWidth+1
-	end
 end )
 
 local GetFPS = 0.0
 function InfoBarHelper()
 	w, h = draw.GetScreenSize();
-	x1, y1, x2, y2 = w/2.5, h-30, w-x1, h
-
-	CommonNumberH = y2-16
-	KWidth, AWidth, DWidth, RoundKWidth = x1+15, x1+35, x1+55, x1+65
-	RoundKillimgH1, RoundKillsH, RoundKillimgH2 = h-24, h-20, h
-	VelTextWidth, PingTextWidth, FPSTextWidth = x2-100, x2-74, x2-36
 
 	-- FPS
 	GetFPS = 0.9 * GetFPS + (1.0 - 0.9) * globals.AbsoluteFrameTime();
@@ -129,4 +113,45 @@ function InfoBarHelper()
 
 	-- Ping
 	Ping = entities.GetPlayerResources():GetPropInt( "m_iPing", client.GetLocalPlayerIndex() );
+end
+
+function ResolutionCheck()
+	InfoBarHelper()
+	if w == 1024 and h == 768 then
+		DefaultFont = draw.CreateFont( "Impact", 18 )
+		NumberFont = draw.CreateFont( "Impact", 17 )
+		RoundKillFont = draw.CreateFont( "Impact", 15 )
+
+		x1, y1, x2, y2 = w/2.5, h-30, w-x1, h
+		CommonNumberH = y2-16
+		KWidth, AWidth, DWidth = x1+15, x1+35, x1+55
+		RoundKWidth, RoundKillimgH1, RoundKillsH, RoundKillimgH2 = x1+65, h-24, h-20, h
+		VelTextWidth, PingTextWidth, FPSTextWidth = x2-100, x2-74, x2-36
+
+		if Ping <= 9 then					PingWidth = PingTextWidth+10
+		elseif Ping > 9 and Ping <= 99 then	PingWidth = PingTextWidth+6
+		elseif Ping > 99 then				PingWidth = PingTextWidth+4
+		end
+		if FPS <= 99 then					FPSWidth = FPSTextWidth+3.5
+		else 								FPSWidth = FPSTextWidth+1
+		end
+	else
+		DefaultFont = draw.CreateFont( "Impact", 20 )
+		NumberFont = draw.CreateFont( "Impact", 19 )
+		RoundKillFont = draw.CreateFont( "Impact", 17 )
+
+		x1, y1, x2, y2 = (w/2.5)+10, h-35, w-x1, h
+		CommonNumberH = y2-19
+		KWidth, AWidth, DWidth = x1+15, x1+40, x1+65
+		RoundKWidth, RoundKillimgH1, RoundKillsH, RoundKillimgH2 = x1+77, h-26, h-23, h-2
+		VelTextWidth, PingTextWidth, FPSTextWidth = x2-112, x2-80, x2-36
+
+		if Ping <= 9 then					PingWidth = PingTextWidth+10
+		elseif Ping > 9 and Ping <= 99 then	PingWidth = PingTextWidth+8
+		elseif Ping > 99 then				PingWidth = PingTextWidth+4.5
+		end
+		if FPS <= 99 then					FPSWidth = FPSTextWidth+4
+		else 								FPSWidth = FPSTextWidth
+		end
+	end
 end
